@@ -1,0 +1,73 @@
+﻿<Window x:Class="Loblaws.Wpf.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />            
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+
+            <ListBox Grid.Row="0" ItemsSource="{Binding Path=Items, Mode=OneWay}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="200" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBox Grid.Column="0" Text="{Binding Path=Nom}" />
+
+                            <TextBox Grid.Column="1" Text="{Binding Path=Prix}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Button Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Ajouter" Command="{Binding Path=CommandeAjouterItem, Mode=OneWay}" />
+
+            <Button Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Nettoyer" Command="{Binding Path=CommandeNettoyerItems, Mode=OneWay}" />
+        </Grid>
+
+        <GroupBox Grid.Column="1" Header="Calculs">
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="30" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Row="0" Grid.Column="0" Content="Sous-total :" />
+
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=SousTotal, Mode=OneWay, StringFormat=C2}" />
+
+                <Label Grid.Row="1" Grid.Column="0" Content="Montant des taxes :" />
+
+                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=MontantTaxes, Mode=OneWay, StringFormat=C2}" />
+
+                <Label Grid.Row="2" Grid.Column="0" Content="Total :" />
+
+                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=Total, Mode=OneWay, StringFormat=C2}" />
+
+                <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Calculer" Command="{Binding Path=CommandeCalculer, Mode=OneWay}" />
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
