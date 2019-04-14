@@ -18,22 +18,26 @@
                 <RowDefinition Height="30" />
             </Grid.RowDefinitions>
 
-            <ListBox Grid.Row="0" ItemsSource="{Binding Path=Items, Mode=OneWay}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="200" />
-                                <ColumnDefinition Width="100" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBox Grid.Column="0" Text="{Binding Path=Nom}" />
-
-                            <TextBox Grid.Column="1" Text="{Binding Path=Prix}" />
-                        </Grid>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <ListView Grid.Row="0" ItemsSource="{Binding Path=Items, Mode=OneWay}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Description">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Width="200" Text="{Binding Path=Nom}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Prix">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox Width="100" Text="{Binding Path=Prix, StringFormat=C2}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
 
             <Button Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Ajouter" Command="{Binding Path=CommandeAjouterItem, Mode=OneWay}" />
 
@@ -43,9 +47,9 @@
         <GroupBox Grid.Column="1" Header="Calculs">
             <Grid Grid.Column="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
-                    <RowDefinition Height="30" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="40" />
                     <RowDefinition Height="*" />
                     <RowDefinition Height="30" />
                 </Grid.RowDefinitions>
@@ -54,17 +58,17 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <Label Grid.Row="0" Grid.Column="0" Content="Sous-total :" />
+                <Label Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Content="Sous-total :" />
 
-                <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding Path=SousTotal, Mode=OneWay, StringFormat=C2}" />
+                <TextBlock Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=SousTotal, Mode=OneWay, StringFormat=C2}" />
 
-                <Label Grid.Row="1" Grid.Column="0" Content="Montant des taxes :" />
+                <Label Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Content="Montant des taxes :" />
 
-                <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Path=MontantTaxes, Mode=OneWay, StringFormat=C2}" />
+                <TextBlock Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=MontantTaxes, Mode=OneWay, StringFormat=C2}" />
 
-                <Label Grid.Row="2" Grid.Column="0" Content="Total :" />
+                <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" Content="Total :" />
 
-                <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Path=Total, Mode=OneWay, StringFormat=C2}" />
+                <TextBlock Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Text="{Binding Path=Total, Mode=OneWay, StringFormat=C2}" />
 
                 <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Calculer" Command="{Binding Path=CommandeCalculer, Mode=OneWay}" />
             </Grid>

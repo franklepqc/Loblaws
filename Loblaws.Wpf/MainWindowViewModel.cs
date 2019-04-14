@@ -86,6 +86,9 @@ namespace Loblaws.Wpf
             CommandeAjouterItem = new DelegateCommand(AjouterItem);
             CommandeNettoyerItems = new DelegateCommand(Nettoyer);
             CommandeCalculer = new DelegateCommand(Calculer);
+
+            // Ajout d'un élément, prêt pour l'édition.
+            AjouterItem();
         }
 
         /// <summary>
