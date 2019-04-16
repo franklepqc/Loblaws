@@ -1,4 +1,4 @@
-﻿namespace Loblaws.Wpf
+﻿namespace Loblaws.Wpf.Models
 {
     public class ItemCommande
     {

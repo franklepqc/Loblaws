@@ -1,11 +1,12 @@
 ﻿using Loblaws.Biz.Interfaces;
+using Loblaws.Wpf.Models;
 using Prism.Commands;
 using Prism.Mvvm;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
 
-namespace Loblaws.Wpf
+namespace Loblaws.Wpf.ViewModels
 {
     /// <summary>
     /// Classe qui régit l'intéraction entre l'interface graphique et le back-end.

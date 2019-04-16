@@ -1,6 +1,4 @@
-﻿using Loblaws.Biz;
-
-namespace Loblaws.Wpf
+﻿namespace Loblaws.Wpf.Views
 {
     /// <summary>
     /// Logique d'interaction pour MainWindow.xaml
@@ -10,11 +8,6 @@ namespace Loblaws.Wpf
         public MainWindow()
         {
             InitializeComponent();
-
-            DataContext = new MainWindowViewModel(
-                new CalculSousTotal(),
-                new CalculTaxes(),
-                new CalculTotal());
         }
     }
 }

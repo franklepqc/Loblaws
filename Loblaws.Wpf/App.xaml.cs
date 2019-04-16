@@ -1,30 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
+﻿using Loblaws.Biz;
+using Loblaws.Biz.Interfaces;
+using Loblaws.Wpf.Views;
+using Prism.Ioc;
+using Prism.Unity;
 using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Markup;
 
 namespace Loblaws.Wpf
 {
     /// <summary>
-    /// Logique d'interaction pour App.xaml
+    /// Interaction logic for App.xaml
     /// </summary>
-    public partial class App : Application
+    public partial class App : PrismApplication
     {
+        /// <summary>
+        /// Fenêtre de départ.
+        /// </summary>
+        /// <returns>Window.</returns>
+        protected override Window CreateShell() =>
+            Container.Resolve<MainWindow>();
+
+        /// <summary>
+        /// Injection de dépendances.
+        /// </summary>
+        /// <param name="containerRegistry">Régistre.</param>
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        {
+            // Injection.
+            containerRegistry.Register<ICalculSousTotal, CalculSousTotal>();
+            containerRegistry.Register<ICalculTaxes, CalculTaxes>();
+            containerRegistry.Register<ICalculTotal, CalculTotal>();
+        }
+
+        /// <summary>
+        /// Sur démarrage, s'assurer de la culture courante.
+        /// </summary>
+        /// <param name="e">Arguments.</param>
         protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
-
-            // Initialiser la culture.
+            // Établir la culture courante.
             FrameworkElement.LanguageProperty.OverrideMetadata(
                 typeof(FrameworkElement), 
                 new FrameworkPropertyMetadata(
-                    XmlLanguage.GetLanguage(
-                        CultureInfo.CurrentCulture.IetfLanguageTag)));
+                    XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag)));
+
+            base.OnStartup(e);
         }
     }
 }
