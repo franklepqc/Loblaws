@@ -1,4 +1,6 @@
-﻿namespace Loblaws.Biz
+﻿using System.Linq;
+
+namespace Loblaws.Biz
 {
     /// <summary>
     /// Implémentation de l'interface.
@@ -12,7 +14,21 @@
         /// <returns>Sous-total.</returns>
         public decimal Calculer(decimal[] prixArticles)
         {
-            return 0m;
+            // Variables.
+            decimal somme = 0m;
+
+            if (null != prixArticles)
+            {
+                foreach (decimal prix in prixArticles)
+                {
+                    if (prix > 0m)
+                    {
+                        somme += prix;
+                    }
+                }
+            }
+
+            return somme;
         }
     }
 }

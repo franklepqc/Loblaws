@@ -1,4 +1,6 @@
-﻿namespace Loblaws.Biz
+﻿using System;
+
+namespace Loblaws.Biz
 {
     /// <summary>
     /// Implémentation du total.
@@ -13,7 +15,7 @@
         /// <returns>Montant total.</returns>
         public decimal Calculer(decimal sousTotal, decimal taxes)
         {
-            return 0m;
+            return Math.Max(0m, sousTotal) + Math.Max(0m, taxes);
         }
     }
 }
