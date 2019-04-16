@@ -2,6 +2,7 @@
 using Loblaws.Wpf.Models;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -13,6 +14,23 @@ namespace Loblaws.Wpf.ViewModels
     /// </summary>
     public class MainWindowViewModel : BindableBase
     {
+        /// <summary>
+        /// Articles à scanner.
+        /// </summary>
+        private static Tuple<string, decimal>[] _articlesScan = new Tuple<string, decimal>[5]
+        {
+            new Tuple<string, decimal>("Kit Kat", 0.99m),
+            new Tuple<string, decimal>("Ramens", 2.49m),
+            new Tuple<string, decimal>("Hamberger Helper", 11.49m),
+            new Tuple<string, decimal>("Macaroni", 11.99m),
+            new Tuple<string, decimal>("Sauce tomate", 10m)
+        };
+        
+        /// <summary>
+        /// Facteur de hasard.
+        /// </summary>
+        private Random _facteurHasard = new Random();
+
         /// <summary>
         /// Calculateurs.
         /// </summary>
@@ -63,6 +81,16 @@ namespace Loblaws.Wpf.ViewModels
         public ICommand CommandeAjouterItem { get; private set; }
 
         /// <summary>
+        /// Commande de scan d'un item.
+        /// </summary>
+        public ICommand CommandeScannerItem { get; private set; }
+
+        /// <summary>
+        /// Commande de suppression d'un item.
+        /// </summary>
+        public ICommand CommandeSupprimerItem { get; private set; }
+
+        /// <summary>
         /// Commande du nettoyage.
         /// </summary>
         public ICommand CommandeNettoyerItems { get; private set; }
@@ -85,6 +113,8 @@ namespace Loblaws.Wpf.ViewModels
             _calculTotal = calculTotal;
 
             CommandeAjouterItem = new DelegateCommand(AjouterItem);
+            CommandeScannerItem = new DelegateCommand(ScannerItem);
+            CommandeSupprimerItem = new DelegateCommand<ItemCommande>(SupprimerItem);
             CommandeNettoyerItems = new DelegateCommand(Nettoyer);
             CommandeCalculer = new DelegateCommand(Calculer);
 
@@ -109,11 +139,50 @@ namespace Loblaws.Wpf.ViewModels
         }
 
         /// <summary>
+        /// Ajoute un item dans la liste à partir d'un scan.
+        /// </summary>
+        private void ScannerItem()
+        {
+            var nouvelItem = _articlesScan[_facteurHasard.Next(0, 5)];
+            AjouterItem(nouvelItem.Item1, nouvelItem.Item2);
+
+            // Recalculer le total.
+            Calculer();
+        }
+
+        /// <summary>
         /// Ajoute un item dans la liste.
         /// </summary>
         private void AjouterItem()
         {
-            Items.Add(new ItemCommande());
+            AjouterItem(null, null);
+        }
+
+        /// <summary>
+        /// Ajoute un item dans la liste.
+        /// </summary>
+        /// <param name="nom">Nom de l'article.</param>
+        /// <param name="prix">Prix de l'article.</param>
+        private void AjouterItem(string nom, decimal? prix)
+        {
+            Items.Add(new ItemCommande()
+            {
+                Nom = nom,
+                Prix = prix
+            });
+        }
+
+        /// <summary>
+        /// Supprimer un item dans la liste.
+        /// </summary>
+        /// <param name="item">Item de la liste.</param>
+        private void SupprimerItem(ItemCommande item)
+        {
+            // Retirer l'élément.
+            Items.Remove(item);
+
+            // Recalculer le total.
+            Calculer();
         }
 
         /// <summary>

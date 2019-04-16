@@ -18,9 +18,11 @@
                 <RowDefinition />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
             </Grid.RowDefinitions>
 
-            <ListView Grid.Row="0" ItemsSource="{Binding Path=Items, Mode=OneWay}">
+            <ListView Name="listView" Grid.Row="0" ItemsSource="{Binding Path=Items, Mode=OneWay}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Description">
@@ -42,8 +44,9 @@
             </ListView>
 
             <Button Grid.Row="1" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Ajouter" Command="{Binding Path=CommandeAjouterItem, Mode=OneWay}" />
-
-            <Button Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Nettoyer" Command="{Binding Path=CommandeNettoyerItems, Mode=OneWay}" />
+            <Button Grid.Row="2" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Scan" Command="{Binding Path=CommandeScannerItem, Mode=OneWay}" />
+            <Button Grid.Row="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Supprimer" Command="{Binding Path=CommandeSupprimerItem, Mode=OneWay}" CommandParameter="{Binding Path=SelectedItem, ElementName=listView, Mode=OneWay}" />
+            <Button Grid.Row="4" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Content="Nettoyer" Command="{Binding Path=CommandeNettoyerItems, Mode=OneWay}" />
         </Grid>
 
         <GroupBox Grid.Column="1" Header="Calculs">
