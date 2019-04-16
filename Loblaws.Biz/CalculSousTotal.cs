@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace Loblaws.Biz
+﻿namespace Loblaws.Biz
 {
     /// <summary>
     /// Implémentation de l'interface.
