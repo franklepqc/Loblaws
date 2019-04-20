@@ -32,9 +32,7 @@ namespace Loblaws.Wpf.ViewModels
         /// Calculateurs.
         /// </summary>
         private readonly ICalculSousTotal _calculSousTotal;
-
         private readonly ICalculTaxes _calculTaxes;
-
         private readonly ICalculTotal _calculTotal;
 
         /// <summary>
@@ -72,13 +70,28 @@ namespace Loblaws.Wpf.ViewModels
             CommandeScannerItem = new DelegateCommand(ScannerItem);
             CommandeSupprimerItem = new DelegateCommand(SupprimerItem, () => Selection != null);
             CommandeNettoyerItems = new DelegateCommand(Nettoyer);
-            CommandeCalculer = new DelegateCommand(Calculer);
 
             // Ajout d'un élément, prêt pour l'édition.
             AjouterItem();
+
+            // Évènement de collection modifiée.
+            Items.CollectionChanged += SurAjoutItemListe;
         }
 
         #endregion Constructors
+
+        #region Destructors
+
+        /// <summary>
+        /// Destructeur.
+        /// </summary>
+        ~MainWindowViewModel()
+        {
+            // Évènement de collection modifiée.
+            Items.CollectionChanged -= SurAjoutItemListe;
+        }
+
+        #endregion Destructors
 
         #region Properties
 
@@ -86,11 +99,6 @@ namespace Loblaws.Wpf.ViewModels
         /// Commande d'ajout d'un item.
         /// </summary>
         public ICommand CommandeAjouterItem { get; private set; }
-
-        /// <summary>
-        /// Commande du calcul.
-        /// </summary>
-        public ICommand CommandeCalculer { get; private set; }
 
         /// <summary>
         /// Commande du nettoyage.
@@ -211,9 +219,6 @@ namespace Loblaws.Wpf.ViewModels
         {
             var nouvelItem = _articlesScan[_facteurHasard.Next(0, 5)];
             AjouterItem(nouvelItem.Item1, nouvelItem.Item2);
-
-            // Recalculer le total.
-            Calculer();
         }
 
         /// <summary>
@@ -224,7 +229,15 @@ namespace Loblaws.Wpf.ViewModels
         {
             // Retirer l'élément.
             Items.Remove(Selection);
+        }
 
+        /// <summary>
+        /// Sur ajout d'un item dans la liste.
+        /// </summary>
+        /// <param name="sender">Objet appelant la méthode.</param>
+        /// <param name="e">Arguments d'ajouts.</param>
+        private void SurAjoutItemListe(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
             // Recalculer le total.
             Calculer();
         }
