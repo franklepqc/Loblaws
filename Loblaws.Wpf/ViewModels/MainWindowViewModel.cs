@@ -14,6 +14,8 @@ namespace Loblaws.Wpf.ViewModels
     /// </summary>
     public class MainWindowViewModel : BindableBase
     {
+        #region Fields
+
         /// <summary>
         /// Articles à scanner.
         /// </summary>
@@ -25,80 +27,34 @@ namespace Loblaws.Wpf.ViewModels
             new Tuple<string, decimal>("Macaroni", 11.99m),
             new Tuple<string, decimal>("Sauce tomate", 10m)
         };
-        
+
+        /// <summary>
+        /// Calculateurs.
+        /// </summary>
+        private readonly ICalculSousTotal _calculSousTotal;
+
+        private readonly ICalculTaxes _calculTaxes;
+
+        private readonly ICalculTotal _calculTotal;
+
         /// <summary>
         /// Facteur de hasard.
         /// </summary>
         private Random _facteurHasard = new Random();
 
         /// <summary>
-        /// Calculateurs.
+        /// Sélection.
         /// </summary>
-        private readonly ICalculSousTotal _calculSousTotal;
-        private readonly ICalculTaxes _calculTaxes;
-        private readonly ICalculTotal _calculTotal;
+        private ItemCommande _selection;
 
         /// <summary>
         /// Conteneurs.
         /// </summary>
         private decimal _sousTotal, _montantTaxes, _total;
 
-        /// <summary>
-        /// Items de la commande.
-        /// </summary>
-        public ObservableCollection<ItemCommande> Items { get; private set; } = new ObservableCollection<ItemCommande>();
+        #endregion Fields
 
-        /// <summary>
-        /// Obtient ou assigne le sous-total.
-        /// </summary>
-        public decimal SousTotal
-        {
-            get => _sousTotal;
-            set => SetProperty(ref _sousTotal, value);
-        }
-
-        /// <summary>
-        /// Obtient ou assigne le montant des taxes.
-        /// </summary>
-        public decimal MontantTaxes
-        {
-            get => _montantTaxes;
-            set => SetProperty(ref _montantTaxes, value);
-        }
-
-        /// <summary>
-        /// Obtient ou assigne le total.
-        /// </summary>
-        public decimal Total
-        {
-            get => _total;
-            set => SetProperty(ref _total, value);
-        }
-
-        /// <summary>
-        /// Commande d'ajout d'un item.
-        /// </summary>
-        public ICommand CommandeAjouterItem { get; private set; }
-
-        /// <summary>
-        /// Commande de scan d'un item.
-        /// </summary>
-        public ICommand CommandeScannerItem { get; private set; }
-
-        /// <summary>
-        /// Commande de suppression d'un item.
-        /// </summary>
-        public ICommand CommandeSupprimerItem { get; private set; }
-
-        /// <summary>
-        /// Commande du nettoyage.
-        /// </summary>
-        public ICommand CommandeNettoyerItems { get; private set; }
-
-        /// <summary>
-        /// Commande du calcul.
-        /// </summary>
-        public ICommand CommandeCalculer { get; private set; }
+        #region Constructors
 
         /// <summary>
         /// Constructeur par injection.
@@ -114,12 +70,122 @@ namespace Loblaws.Wpf.ViewModels
 
             CommandeAjouterItem = new DelegateCommand(AjouterItem);
             CommandeScannerItem = new DelegateCommand(ScannerItem);
-            CommandeSupprimerItem = new DelegateCommand<ItemCommande>(SupprimerItem);
+            CommandeSupprimerItem = new DelegateCommand(SupprimerItem, () => Selection != null);
             CommandeNettoyerItems = new DelegateCommand(Nettoyer);
             CommandeCalculer = new DelegateCommand(Calculer);
 
             // Ajout d'un élément, prêt pour l'édition.
             AjouterItem();
+        }
+
+        #endregion Constructors
+
+        #region Properties
+
+        /// <summary>
+        /// Commande d'ajout d'un item.
+        /// </summary>
+        public ICommand CommandeAjouterItem { get; private set; }
+
+        /// <summary>
+        /// Commande du calcul.
+        /// </summary>
+        public ICommand CommandeCalculer { get; private set; }
+
+        /// <summary>
+        /// Commande du nettoyage.
+        /// </summary>
+        public ICommand CommandeNettoyerItems { get; private set; }
+
+        /// <summary>
+        /// Commande de scan d'un item.
+        /// </summary>
+        public ICommand CommandeScannerItem { get; private set; }
+
+        /// <summary>
+        /// Commande de suppression d'un item.
+        /// </summary>
+        public DelegateCommandBase CommandeSupprimerItem { get; private set; }
+
+        /// <summary>
+        /// Items de la commande.
+        /// </summary>
+        public ObservableCollection<ItemCommande> Items { get; private set; } = new ObservableCollection<ItemCommande>();
+
+        /// <summary>
+        /// Obtient ou assigne le montant des taxes.
+        /// </summary>
+        public decimal MontantTaxes
+        {
+            get => _montantTaxes;
+            set => SetProperty(ref _montantTaxes, value);
+        }
+
+        /// <summary>
+        /// Sélection.
+        /// </summary>
+        public ItemCommande Selection
+        {
+            get => _selection;
+            set
+            {
+                SetProperty(ref _selection, value);
+                CommandeSupprimerItem.RaiseCanExecuteChanged();
+            }
+        }
+
+        /// <summary>
+        /// Obtient ou assigne le sous-total.
+        /// </summary>
+        public decimal SousTotal
+        {
+            get => _sousTotal;
+            set => SetProperty(ref _sousTotal, value);
+        }
+
+        /// <summary>
+        /// Obtient ou assigne le total.
+        /// </summary>
+        public decimal Total
+        {
+            get => _total;
+            set => SetProperty(ref _total, value);
+        }
+
+        #endregion Properties
+
+        #region Methods
+
+        /// <summary>
+        /// Ajoute un item dans la liste.
+        /// </summary>
+        private void AjouterItem()
+        {
+            AjouterItem(null, null);
+        }
+
+        /// <summary>
+        /// Ajoute un item dans la liste.
+        /// </summary>
+        /// <param name="nom">Nom de l'article.</param>
+        /// <param name="prix">Prix de l'article.</param>
+        private void AjouterItem(string nom, decimal? prix)
+        {
+            Items.Add(new ItemCommande()
+            {
+                Nom = nom,
+                Prix = prix
+            });
+        }
+
+        /// <summary>
+        /// Calcule le sous-total, taxes et le total.
+        /// </summary>
+        private void Calculer()
+        {
+            SousTotal = _calculSousTotal.Calculer(Items.Where(p => p.Prix.HasValue).Select(k => k.Prix.Value).ToArray());
+            MontantTaxes = _calculTaxes.Calculer(SousTotal);
+            Total = _calculTotal.Calculer(SousTotal, MontantTaxes);
         }
 
         /// <summary>
@@ -151,48 +217,18 @@ namespace Loblaws.Wpf.ViewModels
         }
 
         /// <summary>
-        /// Ajoute un item dans la liste.
-        /// </summary>
-        private void AjouterItem()
-        {
-            AjouterItem(null, null);
-        }
-
-        /// <summary>
-        /// Ajoute un item dans la liste.
-        /// </summary>
-        /// <param name="nom">Nom de l'article.</param>
-        /// <param name="prix">Prix de l'article.</param>
-        private void AjouterItem(string nom, decimal? prix)
-        {
-            Items.Add(new ItemCommande()
-            {
-                Nom = nom,
-                Prix = prix
-            });
-        }
-
-        /// <summary>
         /// Supprimer un item dans la liste.
         /// </summary>
         /// <param name="item">Item de la liste.</param>
-        private void SupprimerItem(ItemCommande item)
+        private void SupprimerItem()
         {
             // Retirer l'élément.
-            Items.Remove(item);
+            Items.Remove(Selection);
 
             // Recalculer le total.
             Calculer();
         }
 
-        /// <summary>
-        /// Calcule le sous-total, taxes et le total.
-        /// </summary>
-        private void Calculer()
-        {
-            SousTotal = _calculSousTotal.Calculer(Items.Where(p => p.Prix.HasValue).Select(k => k.Prix.Value).ToArray());
-            MontantTaxes = _calculTaxes.Calculer(SousTotal);
-            Total = _calculTotal.Calculer(SousTotal, MontantTaxes);
-        }
+        #endregion Methods
     }
 }

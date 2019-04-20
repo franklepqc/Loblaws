@@ -9,8 +9,8 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-            <ColumnDefinition />            
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />            
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Column="0">
@@ -22,7 +22,9 @@
                 <RowDefinition Height="30" />
             </Grid.RowDefinitions>
 
-            <ListView Name="listView" Grid.Row="0" ItemsSource="{Binding Path=Items, Mode=OneWay}">
+            <ListView Name="listView" Grid.Row="0" 
+                      ItemsSource="{Binding Path=Items, Mode=OneWay}"
+                      SelectedItem="{Binding Path=Selection}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="Description">
