@@ -51,7 +51,7 @@ namespace Loblaws.Biz.Tests
             var montants = new[] { 10m, 1.33m };
 
             // Attendu.
-            var attendu = 13.0295m;
+            var attendu = 13.03m;
 
             // Actuel.
             var sousTotal = _calculSousTotal.Calculer(montants);
@@ -69,7 +69,7 @@ namespace Loblaws.Biz.Tests
             var montants = new[] { 10m, 1.33m, -5m };
 
             // Attendu.
-            var attendu = 13.0295m;
+            var attendu = 13.03m;
 
             // Actuel.
             var sousTotal = _calculSousTotal.Calculer(montants);

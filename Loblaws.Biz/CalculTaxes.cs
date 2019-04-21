@@ -19,7 +19,9 @@ namespace Loblaws.Biz
         /// <returns>Montant des taxes.</returns>
         public decimal Calculer(decimal sousTotal)
         {
-            return Math.Max(0m, sousTotal) * TAXES;
+            decimal calcul = Math.Max(0m, sousTotal) * TAXES;
+
+            return calcul.RoundCurrency();
         }
     }
 }

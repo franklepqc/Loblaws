@@ -57,7 +57,7 @@ namespace Loblaws.Biz.Tests
             var montants = new decimal[0];
 
             // Attendu.
-            var attendu = 1.683m;
+            var attendu = 1.68m;
 
             // Actuel.
             var actuel = _calcul.Calculer(11.22m);
