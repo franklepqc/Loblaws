@@ -1,4 +1,6 @@
-﻿namespace Loblaws.Biz
+﻿using System.Linq;
+
+namespace Loblaws.Biz
 {
     /// <summary>
     /// Implémentation de l'interface.
@@ -10,23 +12,9 @@
         /// </summary>
         /// <param name="prixArticles">Prix des articles.</param>
         /// <returns>Sous-total.</returns>
-        public decimal Calculer(decimal[] prixArticles)
-        {
-            // Variables.
-            decimal somme = 0m;
-
-            if (null != prixArticles)
-            {
-                foreach (decimal prix in prixArticles)
-                {
-                    if (prix > 0m)
-                    {
-                        somme += prix;
-                    }
-                }
-            }
-
-            return somme;
-        }
+        public decimal Calculer(decimal[] prixArticles) =>
+            (prixArticles ?? new decimal[0])    // Vérification du null.
+                .Where(prix => prix > 0m)       // Filtrer les prix en-deça de zéro.
+                .Sum();                         // Opération feuille : sommation.
     }
 }
