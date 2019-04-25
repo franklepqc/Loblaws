@@ -62,17 +62,15 @@ namespace Loblaws.Wpf.ViewModels
         /// <param name="calculTotal">Calcul du total.</param>
         public MainWindowViewModel(ICalculSousTotal calculSousTotal, ICalculTaxes calculTaxes, ICalculTotal calculTotal)
         {
+            // Initialisation des calculs par injection.
             _calculSousTotal = calculSousTotal;
             _calculTaxes = calculTaxes;
             _calculTotal = calculTotal;
 
-            CommandeAjouterItem = new DelegateCommand(AjouterItem);
+            // Initialisation des commandes.
             CommandeScannerItem = new DelegateCommand(ScannerItem);
             CommandeSupprimerItem = new DelegateCommand(SupprimerItem, () => Selection != null);
             CommandeNettoyerItems = new DelegateCommand(Nettoyer);
-
-            // Ajout d'un élément, prêt pour l'édition.
-            AjouterItem();
 
             // Évènement de collection modifiée.
             Items.CollectionChanged += SurAjoutItemListe;
@@ -94,11 +92,6 @@ namespace Loblaws.Wpf.ViewModels
         #endregion Destructors
 
         #region Properties
-
-        /// <summary>
-        /// Commande d'ajout d'un item.
-        /// </summary>
-        public ICommand CommandeAjouterItem { get; private set; }
 
         /// <summary>
         /// Commande du nettoyage.
@@ -165,28 +158,6 @@ namespace Loblaws.Wpf.ViewModels
         #region Methods
 
         /// <summary>
-        /// Ajoute un item dans la liste.
-        /// </summary>
-        private void AjouterItem()
-        {
-            AjouterItem(null, null);
-        }
-
-        /// <summary>
-        /// Ajoute un item dans la liste.
-        /// </summary>
-        /// <param name="nom">Nom de l'article.</param>
-        /// <param name="prix">Prix de l'article.</param>
-        private void AjouterItem(string nom, decimal? prix)
-        {
-            Items.Add(new ItemCommande()
-            {
-                Nom = nom,
-                Prix = prix
-            });
-        }
-
-        /// <summary>
         /// Calcule le sous-total, taxes et le total.
         /// </summary>
         private void Calculer()
@@ -201,15 +172,8 @@ namespace Loblaws.Wpf.ViewModels
         /// </summary>
         private void Nettoyer()
         {
+            // Vider la liste. Du coup, le calcul se fait à nouveau.
             Items.Clear();
-
-            // Remettre à zéro.
-            SousTotal = 0m;
-            MontantTaxes = 0m;
-            Total = 0m;
-
-            // Un élément de base.
-            AjouterItem();
         }
 
         /// <summary>
@@ -217,8 +181,15 @@ namespace Loblaws.Wpf.ViewModels
         /// </summary>
         private void ScannerItem()
         {
+            // Récupérer un nouvel article aléatoirement.
             var nouvelItem = _articlesScan[_facteurHasard.Next(0, 5)];
-            AjouterItem(nouvelItem.Item1, nouvelItem.Item2);
+
+            // Ajout dans la liste.
+            Items.Add(new ItemCommande()
+            {
+                Nom = nouvelItem.Item1,
+                Prix = nouvelItem.Item2
+            });
         }
 
         /// <summary>
