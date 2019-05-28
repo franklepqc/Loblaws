@@ -25,11 +25,17 @@ namespace Loblaws.Biz.Tests
         [TestMethod]
         public void Zero_Succes()
         {
+            // Variables de travail.
+            var montants = new[]
+            {
+                new Article() { Prix = 0m, SujetTaxes = true }
+            };
+
             // Attendu.
             var attendu = 0m;
 
             // Actuel.
-            var actuel = _calcul.Calculer(0m);
+            var actuel = _calcul.Calculer(montants);
 
             // Assertion.
             Assert.AreEqual(attendu, actuel);
@@ -39,11 +45,17 @@ namespace Loblaws.Biz.Tests
         [TestMethod]
         public void UnMontantFictif_Succes()
         {
+            // Variables de travail.
+            var montants = new[]
+            {
+                new Article() { Prix = 100m, SujetTaxes = true }
+            };
+
             // Attendu.
             var attendu = 15m;
 
             // Actuel.
-            var actuel = _calcul.Calculer(100m);
+            var actuel = _calcul.Calculer(montants);
 
             // Assertion.
             Assert.AreEqual(attendu, actuel);
@@ -54,13 +66,16 @@ namespace Loblaws.Biz.Tests
         public void MontantAvecDecimales_Succes()
         {
             // Variables de travail.
-            var montants = new decimal[0];
+            var montants = new[]
+            {
+                new Article() { Prix = 11.22m, SujetTaxes = true }
+            };
 
             // Attendu.
             var attendu = 1.68m;
 
             // Actuel.
-            var actuel = _calcul.Calculer(11.22m);
+            var actuel = _calcul.Calculer(montants);
 
             // Assertion.
             Assert.AreEqual(attendu, actuel);
@@ -71,13 +86,16 @@ namespace Loblaws.Biz.Tests
         public void MontantNegatif_Succes()
         {
             // Variables de travail.
-            var sousTotal = -5m;
+            var montants = new[]
+            {
+                new Article() { Prix = -5m, SujetTaxes = true }
+            };
 
             // Attendu.
             var attendu = 0m;
 
             // Actuel.
-            var actuel = _calcul.Calculer(sousTotal);
+            var actuel = _calcul.Calculer(montants);
 
             // Assertion.
             Assert.AreEqual(attendu, actuel);

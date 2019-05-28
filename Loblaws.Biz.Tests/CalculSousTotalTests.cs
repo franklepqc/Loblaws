@@ -28,7 +28,7 @@ namespace Loblaws.Biz.Tests
             // Variables de travail.
             var montants = new[]
             {
-                10m
+                new Article() { Prix = 10m }
             };
 
             // Attendu.
@@ -48,8 +48,8 @@ namespace Loblaws.Biz.Tests
             // Variables de travail.
             var montants = new[]
             {
-                10m,
-                21.49m
+                new Article() { Prix = 10m },
+                new Article() { Prix = 21.49m }
             };
 
             // Attendu.
@@ -69,9 +69,9 @@ namespace Loblaws.Biz.Tests
             // Variables de travail.
             var montants = new[]
             {
-                10m,
-                21.49m,
-                -5m
+                new Article() { Prix = 10m },
+                new Article() { Prix = 21.49m },
+                new Article() { Prix = -5m }
             };
 
             // Attendu.
@@ -89,7 +89,7 @@ namespace Loblaws.Biz.Tests
         public void AucunMontant_Succes()
         {
             // Variables de travail.
-            var montants = new decimal[0];
+            var montants = new IArticle[0];
 
             // Attendu.
             var attendu = 0m;

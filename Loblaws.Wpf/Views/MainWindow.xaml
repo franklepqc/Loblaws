@@ -26,7 +26,7 @@
                       SelectedItem="{Binding Path=Selection}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Path=Nom, Mode=OneWay}" />
+                        <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Path=Description, Mode=OneWay}" />
                         <GridViewColumn Header="Prix" DisplayMemberBinding="{Binding Path=Prix, StringFormat=C2, Mode=OneWay}" />
                     </GridView>
                 </ListView.View>

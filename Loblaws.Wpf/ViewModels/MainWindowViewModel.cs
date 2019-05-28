@@ -1,5 +1,5 @@
-﻿using Loblaws.Biz.Interfaces;
-using Loblaws.Wpf.Models;
+﻿using Loblaws.Biz;
+using Loblaws.Biz.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -43,7 +43,7 @@ namespace Loblaws.Wpf.ViewModels
         /// <summary>
         /// Sélection.
         /// </summary>
-        private ItemCommande _selection;
+        private IArticle _selection;
 
         /// <summary>
         /// Conteneurs.
@@ -111,7 +111,7 @@ namespace Loblaws.Wpf.ViewModels
         /// <summary>
         /// Items de la commande.
         /// </summary>
-        public ObservableCollection<ItemCommande> Items { get; private set; } = new ObservableCollection<ItemCommande>();
+        public ObservableCollection<IArticle> Items { get; private set; } = new ObservableCollection<IArticle>();
 
         /// <summary>
         /// Obtient ou assigne le montant des taxes.
@@ -125,7 +125,7 @@ namespace Loblaws.Wpf.ViewModels
         /// <summary>
         /// Sélection.
         /// </summary>
-        public ItemCommande Selection
+        public IArticle Selection
         {
             get => _selection;
             set
@@ -162,9 +162,9 @@ namespace Loblaws.Wpf.ViewModels
         /// </summary>
         private void Calculer()
         {
-            SousTotal = _calculSousTotal.Calculer(Items.Where(p => p.Prix.HasValue).Select(k => k.Prix.Value).ToArray());
-            MontantTaxes = _calculTaxes.Calculer(SousTotal);
-            Total = _calculTotal.Calculer(SousTotal, MontantTaxes);
+            SousTotal = _calculSousTotal.Calculer(Items.ToList());
+            MontantTaxes = _calculTaxes.Calculer(Items.ToList());
+            Total = _calculTotal.Calculer(Items.ToList());
         }
 
         /// <summary>
@@ -185,10 +185,11 @@ namespace Loblaws.Wpf.ViewModels
             var nouvelItem = _articlesScan[_facteurHasard.Next(0, 5)];
 
             // Ajout dans la liste.
-            Items.Add(new ItemCommande()
+            Items.Add(new Article()
             {
-                Nom = nouvelItem.Item1,
-                Prix = nouvelItem.Item2
+                Description = nouvelItem.Item1,
+                Prix = nouvelItem.Item2,
+                SujetTaxes = true
             });
         }
 

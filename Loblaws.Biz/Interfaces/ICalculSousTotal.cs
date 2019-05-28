@@ -1,7 +1,9 @@
-﻿namespace Loblaws.Biz.Interfaces
+﻿using System.Collections.Generic;
+
+namespace Loblaws.Biz.Interfaces
 {
     public interface ICalculSousTotal
     {
-        decimal Calculer(decimal[] prixArticles);
+        decimal Calculer(IEnumerable<IArticle> articles);
     }
 }
